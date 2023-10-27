@@ -10,19 +10,37 @@ const calculator = {
 
     eval() {
         renewAtEvaluation();
-        currNumberDisplay.textContent = 
+        currNumberDisplay.textContent =
             this.calculate[this.expression[2]](this.expression[0], this.expression[1]);
         this.expression = [`${currNumberDisplay.textContent}`, "", ""];
     },
 }
 
 function renewAtEvaluation() {
-    prevExprDisplay.textContent = calculator.expression[0] + " " + calculator.expression[2] +
-        " " + calculator.expression[1];
+    let resultString = "";
+    calculator.expression[0].charAt(0) != "-" ?
+        resultString += calculator.expression[0] :
+        resultString += `(${calculator.expression[0]})`;
+        console.log(resultString);
+
+    resultString = resultString + calculator.expression[2];
+
+    calculator.expression[1][0] != "-" ?
+        resultString += calculator.expression[1] :
+        resultString += `(${calculator.expression[1]})`;
+
+    prevExprDisplay.textContent = resultString;
 }
 
 function renewBeforeSecondOperand() {
-    prevExprDisplay.textContent = calculator.expression[0] + " " + calculator.expression[2];
+    let resultString = "";
+    calculator.expression[0].charAt(0) != "-" ?
+        resultString += calculator.expression[0] :
+        resultString += `(${calculator.expression[0]})`;
+        console.log(resultString);
+    
+    resultString = resultString + calculator.expression[2];
+    prevExprDisplay.textContent = resultString;
 }
 
 function addNewNumber(indexOfOperand, newSymbol) {
@@ -85,7 +103,17 @@ clearBtn.addEventListener('click', () => {
 });
 
 //clearEntryBtn;
-//negativeBtn;
+
+negativeBtn.addEventListener('click', () => {
+    if (calculator.expression[2] === "") {
+        calculator.expression[0] = (-1 * calculator.expression[0]).toString();
+        currNumberDisplay.textContent = calculator.expression[0];
+    }
+    else {
+        calculator.expression[1] = (-1 * calculator.expression[1]).toString();
+        currNumberDisplay.textContent = calculator.expression[1];
+    }
+});
 
 decimalBtn.addEventListener('click', () => {
     decimalBtn.disabled = true;
