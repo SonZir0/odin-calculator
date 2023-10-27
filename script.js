@@ -9,19 +9,19 @@ const calculator = {
     expression: ["0", "", ""],
 
     eval() {
-        let result = this.calculate[this.expression[2]](this.expression[0], this.expression[1]);
-        renewTopDisplay();
-        currNumberDisplay.textContent = result;
-        this.expression = [`${result}`, "", ""];
+        renewAtEvaluation();
+        currNumberDisplay.textContent = 
+            this.calculate[this.expression[2]](this.expression[0], this.expression[1]);
+        this.expression = [`${currNumberDisplay.textContent}`, "", ""];
     },
 }
 
-function renewTopDisplay() {
+function renewAtEvaluation() {
     prevExprDisplay.textContent = calculator.expression[0] + " " + calculator.expression[2] +
         " " + calculator.expression[1];
 }
 
-function renewTopDisplayBeforeEval() {
+function renewBeforeSecondOperand() {
     prevExprDisplay.textContent = calculator.expression[0] + " " + calculator.expression[2];
 }
 
@@ -40,6 +40,9 @@ const operationBtns = document.querySelectorAll(".operation");
 const displayBtns = document.querySelectorAll(".forDisplay");
 let decimalBtn = document.querySelector(".decimal");
 let evalBtn = document.querySelector(".eval");
+let clearBtn = document.querySelector(".clearAll");
+let clearEntryBtn = document.querySelector(".clearEntry");
+let negativeBtn = document.querySelector(".negative");
 
 for (let btn of Array.from(inputButtons)) {
     btn.addEventListener('click', () => {
@@ -49,25 +52,10 @@ for (let btn of Array.from(inputButtons)) {
             addNewNumber(0, btn.textContent);
         else {
             addNewNumber(1, btn.textContent);
-            renewTopDisplayBeforeEval();
+            renewBeforeSecondOperand();
         }
     });
 }
-
-decimalBtn.addEventListener('click', () => {
-    decimalBtn.disabled = true;
-    decimalBtn.style.backgroundColor = "lightskyblue";
-    decimalBtn.style.borderColor = "dimgrey";
-});
-
-evalBtn.addEventListener('click', () => {
-    if (calculator.expression[2] === "")
-        prevExprDisplay.textContent = calculator.expression[0];
-    // if there's some operator choosen but no second operand - do nothing
-    else if (calculator.expression[1] === "")
-        return 0;
-    else calculator.eval();
-});
 
 for (let btn of Array.from(operationBtns)) {
     btn.addEventListener('click', () => {
@@ -79,3 +67,28 @@ for (let btn of Array.from(operationBtns)) {
         currNumberDisplay.textContent += ` ${btn.textContent}`;
     });
 }
+
+evalBtn.addEventListener('click', () => {
+    if (calculator.expression[2] === "")
+        prevExprDisplay.textContent = calculator.expression[0];
+    // if there's some operator choosen but no second operand - do nothing
+    else if (calculator.expression[1] === "")
+        return 0;
+    else calculator.eval();
+});
+
+clearBtn.addEventListener('click', () => {
+    calculator.expression = ["0", "", ""];
+    currNumberDisplay.textContent = "0";
+    prevExprDisplay.textContent = "";
+    decimalBtn.disabled = false;
+});
+
+//clearEntryBtn;
+//negativeBtn;
+
+decimalBtn.addEventListener('click', () => {
+    decimalBtn.disabled = true;
+    decimalBtn.style.backgroundColor = "lightskyblue";
+    decimalBtn.style.borderColor = "dimgrey";
+});

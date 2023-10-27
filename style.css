@@ -29,8 +29,9 @@ p {
 }
 
 .display .prevExpression {
-    font-size: 32px;
+    font-size: 28px;
     border-bottom: 2px dashed black;
+    height: 34px;
 }
 
 .buttons {
@@ -62,7 +63,8 @@ button {
     background-color: lightsteelblue;
 }
 
-.operation {
+.operation,
+.eval {
     background-color: goldenrod;
 }
 
