@@ -18,7 +18,7 @@ const calculator = {
 
 function renewAtEvaluation() {
     let resultString = "";
-    calculator.expression[0].charAt(0) != "-" ?
+    calculator.expression[0][0] != "-" ?
         resultString += calculator.expression[0] :
         resultString += `(${calculator.expression[0]})`;
         console.log(resultString);
@@ -45,7 +45,7 @@ function renewBeforeSecondOperand() {
 
 function addNewNumber(indexOfOperand, newSymbol) {
     // if there's a leading zero - override
-    if (calculator.expression[indexOfOperand][0] === "0")
+    if (calculator.expression[indexOfOperand].slice(-1) === "0" && newSymbol != '.')
         calculator.expression[indexOfOperand] = newSymbol;
     else calculator.expression[indexOfOperand] += newSymbol;
     currNumberDisplay.textContent = calculator.expression[indexOfOperand];
