@@ -6,8 +6,24 @@ const calculator = {
         "/": (a, b) => +a / +b,
     },
     // first/second operand and some operation
-    expression: ["0", "0", ""],
-};
+    expression: ["0", "", ""],
+
+    eval() {
+        let result = this.calculate[this.expression[2]](this.expression[0], this.expression[1]);
+        renewTopDisplay();
+        currNumberDisplay.textContent = result;
+        this.expression = [`${result}`, "", ""];
+    },
+}
+
+function renewTopDisplay() {
+    prevExprDisplay.textContent = calculator.expression[0] + " " + calculator.expression[2] +
+        " " + calculator.expression[1];
+}
+
+function renewTopDisplayBeforeEval() {
+    prevExprDisplay.textContent = calculator.expression[0] + " " + calculator.expression[2];
+}
 
 function addNewNumber(indexOfOperand, newSymbol) {
     // if there's a leading zero - override
@@ -17,28 +33,49 @@ function addNewNumber(indexOfOperand, newSymbol) {
     currNumberDisplay.textContent = calculator.expression[indexOfOperand];
 }
 
-
-const buttons = document.querySelectorAll(".forInput");
-let btn = document.querySelector(".decimal");
 let currNumberDisplay = document.querySelector(".currNumber");
 let prevExprDisplay = document.querySelector(".prevExpression");
+const inputButtons = document.querySelectorAll(".forInput");
+const operationBtns = document.querySelectorAll(".operation");
+const displayBtns = document.querySelectorAll(".forDisplay");
+let decimalBtn = document.querySelector(".decimal");
+let evalBtn = document.querySelector(".eval");
 
-for (let btn of Array.from(buttons)) {
+for (let btn of Array.from(inputButtons)) {
     btn.addEventListener('click', () => {
         /*  if user choose some operation, then we're dealing
             with second operand  */
         if (!calculator.expression[2])
             addNewNumber(0, btn.textContent);
-        else addNewNumber(1, btn.textContent);
+        else {
+            addNewNumber(1, btn.textContent);
+            renewTopDisplayBeforeEval();
+        }
     });
 }
 
-btn.addEventListener('click', () => {
-    btn.disabled = true;
-    btn.style.backgroundColor = "lightskyblue";
-    btn.style.borderColor = "dimgrey";
+decimalBtn.addEventListener('click', () => {
+    decimalBtn.disabled = true;
+    decimalBtn.style.backgroundColor = "lightskyblue";
+    decimalBtn.style.borderColor = "dimgrey";
 });
 
-/* currNumberDisplay.addEventListener(''() => {
+evalBtn.addEventListener('click', () => {
+    if (calculator.expression[2] === "")
+        prevExprDisplay.textContent = calculator.expression[0];
+    // if there's some operator choosen but no second operand - do nothing
+    else if (calculator.expression[1] === "")
+        return 0;
+    else calculator.eval();
+});
 
-}); */
+for (let btn of Array.from(operationBtns)) {
+    btn.addEventListener('click', () => {
+        /*  if there's 2 operand, then operator's choosen too
+            evaluate and line up new operator   */
+        if (calculator.expression[1])
+            calculator.eval();
+        calculator.expression[2] = btn.textContent;
+        currNumberDisplay.textContent += ` ${btn.textContent}`;
+    });
+}
