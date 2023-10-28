@@ -24,15 +24,17 @@ html {
 
 p {
     margin: 0px;
-    height: 64px;
+    min-height: 64px;
     font-size: 56px;
     text-align: right;
+    overflow-wrap: anywhere;
 }
 
 .display .prevExpression {
     font-size: 28px;
     border-bottom: 2px dashed black;
-    height: 34px;
+    min-height: 34px;
+    overflow-wrap: break-word;
 }
 
 .buttons {

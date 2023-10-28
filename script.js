@@ -1,9 +1,21 @@
 const calculator = {
     calculate: {
-        "+": (a, b) => +a + +b,
-        "-": (a, b) => +a - +b,
-        "*": (a, b) => +a * +b,
-        "/": (a, b) => +a / +b,
+        "+": (a, b) => {
+            let result = +a + +b;
+            return parseFloat(result.toFixed(8));
+        },
+        "-": (a, b) => {
+            let result = +a - +b
+            return parseFloat(result.toFixed(8));
+        },
+        "*": (a, b) => {
+            let result = +a * +b
+            return parseFloat(result.toFixed(8));
+        },
+        "/": (a, b) => {
+            let result = +a / +b;
+            return parseFloat(result.toFixed(8));
+        },
     },
 
     expression: ["0", "", ""],  //  first/second operand and some operation
@@ -26,8 +38,8 @@ function showPastExpression() {
     let resultString = get1OperandAndOperation();
     // add second operand
     calculator.expression[1][0] != "-" ?
-        resultString += calculator.expression[1] :
-        resultString += `(${calculator.expression[1]})`;
+        resultString += " " + calculator.expression[1] :
+        resultString += ` (${calculator.expression[1]})`;
     // show whole expression
     prevExprDisplay.textContent = resultString;
 }
@@ -38,7 +50,7 @@ function get1OperandAndOperation() {
         resultString += calculator.expression[0] :
         resultString += `(${calculator.expression[0]})`;
 
-    resultString += calculator.expression[2];
+    resultString += " " + calculator.expression[2];
     return resultString;
 }
 
