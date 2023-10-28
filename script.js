@@ -9,36 +9,31 @@ const calculator = {
     expression: ["0", "", ""],
 
     eval() {
-        renewAtEvaluation();
+        showPastExpression();
         currNumberDisplay.textContent =
             this.calculate[this.expression[2]](this.expression[0], this.expression[1]);
         this.expression = [`${currNumberDisplay.textContent}`, "", ""];
     },
 }
 
-function renewAtEvaluation() {
+function showPastExpression() {
+    let resultString = get1OperandAndOperation();
+    // add second operand
+    calculator.expression[1][0] != "-" ?
+        resultString += calculator.expression[1] :
+        resultString += `(${calculator.expression[1]})`;
+    // show whole expression
+    prevExprDisplay.textContent = resultString;
+}
+
+function get1OperandAndOperation() {
     let resultString = "";
     calculator.expression[0][0] != "-" ?
         resultString += calculator.expression[0] :
         resultString += `(${calculator.expression[0]})`;
 
-    resultString = resultString + calculator.expression[2];
-
-    calculator.expression[1][0] != "-" ?
-        resultString += calculator.expression[1] :
-        resultString += `(${calculator.expression[1]})`;
-
-    prevExprDisplay.textContent = resultString;
-}
-
-function renewBeforeSecondOperand() {
-    let resultString = "";
-    calculator.expression[0].charAt(0) != "-" ?
-        resultString += calculator.expression[0] :
-        resultString += `(${calculator.expression[0]})`;
-
-    resultString = resultString + calculator.expression[2];
-    prevExprDisplay.textContent = resultString;
+    resultString += calculator.expression[2];
+    return resultString;
 }
 
 function addNewNumber(indexOfOperand, newSymbol) {
@@ -48,6 +43,17 @@ function addNewNumber(indexOfOperand, newSymbol) {
         calculator.expression[indexOfOperand] = newSymbol;
     else calculator.expression[indexOfOperand] += newSymbol;
     currNumberDisplay.textContent = calculator.expression[indexOfOperand];
+}
+
+function clearLastSymbols(indexOfOperand) {
+    if (calculator.expression[indexOfOperand].slice(-1) === ".")
+        decimalBtn.disabled = false;
+    calculator.expression[indexOfOperand] = calculator.expression[indexOfOperand].slice(0, -1);
+
+    if (calculator.expression[indexOfOperand] === "-")
+        calculator.expression[indexOfOperand] = ""; // throw away sign if it's there
+    
+    else currNumberDisplay.textContent = calculator.expression[indexOfOperand];
 }
 
 let currNumberDisplay = document.querySelector(".currNumber");
@@ -69,7 +75,7 @@ for (let btn of Array.from(inputButtons)) {
             addNewNumber(0, btn.textContent);
         else {
             addNewNumber(1, btn.textContent);
-            renewBeforeSecondOperand();
+            prevExprDisplay.textContent = get1OperandAndOperation();
         }
     });
 }
@@ -101,7 +107,25 @@ clearBtn.addEventListener('click', () => {
     decimalBtn.disabled = false;
 });
 
-//clearEntryBtn;
+clearEntryBtn.addEventListener('click', () => {
+    if (calculator.expression[1] !== "") {
+        clearLastSymbols(1);
+        if (calculator.expression[1] === "") {
+            prevExprDisplay.textContent = "";
+            currNumberDisplay.textContent = calculator.expression[0] + ' ' + calculator.expression[2]
+        }
+    }
+    // if there's a sign choosen - clear top display and refresh main
+    // display to show first operand
+    else if (calculator.expression[2] !== "") {
+        calculator.expression[2] = "";
+        currNumberDisplay.textContent = calculator.expression[0];
+    } else {
+        clearLastSymbols(0);
+        if (calculator.expression[0] === "")    // display decoy zero instead of void
+            currNumberDisplay.textContent = "0"
+    }
+});
 
 negativeBtn.addEventListener('click', () => {
     // if there's second operand flip - the sign on it
@@ -118,6 +142,4 @@ negativeBtn.addEventListener('click', () => {
 
 decimalBtn.addEventListener('click', () => {
     decimalBtn.disabled = true;
-    decimalBtn.style.backgroundColor = "lightskyblue";
-    decimalBtn.style.borderColor = "dimgrey";
 });

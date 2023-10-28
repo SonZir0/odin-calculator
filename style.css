@@ -24,6 +24,7 @@ html {
 
 p {
     margin: 0px;
+    height: 64px;
     font-size: 56px;
     text-align: right;
 }
@@ -61,6 +62,11 @@ button {
 
 .forInput {
     background-color: lightsteelblue;
+}
+
+.decimal:disabled {
+    background-color: lightskyblue;
+    border-color: dimgrey;
 }
 
 .operation,
