@@ -21,7 +21,6 @@ function renewAtEvaluation() {
     calculator.expression[0][0] != "-" ?
         resultString += calculator.expression[0] :
         resultString += `(${calculator.expression[0]})`;
-        console.log(resultString);
 
     resultString = resultString + calculator.expression[2];
 
@@ -105,13 +104,15 @@ clearBtn.addEventListener('click', () => {
 //clearEntryBtn;
 
 negativeBtn.addEventListener('click', () => {
-    if (calculator.expression[2] === "") {
-        calculator.expression[0] = (-1 * calculator.expression[0]).toString();
-        currNumberDisplay.textContent = calculator.expression[0];
-    }
-    else {
+    // if there's second operand flip - the sign on it
+    if (calculator.expression[1] !== "") {
         calculator.expression[1] = (-1 * calculator.expression[1]).toString();
         currNumberDisplay.textContent = calculator.expression[1];
+    } // else flip the sign on first one and clear operator (if choosen)
+    else {
+        calculator.expression[0] = (-1 * calculator.expression[0]).toString();
+        currNumberDisplay.textContent = calculator.expression[0];
+        calculator.expression[2] = "";
     }
 });
 
