@@ -82,6 +82,16 @@ function clearLastSymbols(indexOfOperand) {
     else currNumberDisplay.textContent = calculator.expression[indexOfOperand];
 }
 
+function changeSign(index) {
+    calculator.expression[index] = (-1 * calculator.expression[index]).toString();
+    currNumberDisplay.textContent = calculator.expression[index];
+    /*  if current operand lost it's decimal after *(-1)
+        activate decimal button     */
+    if (Number.isInteger(+calculator.expression[index]))
+        decimalBtn.disabled = false;
+    else decimalBtn.disabled = true;
+}
+
 const currNumberDisplay = document.querySelector(".currNumber");
 const prevExprDisplay = document.querySelector(".prevExpression");
 const inputButtons = document.querySelectorAll(".forInput");
@@ -115,7 +125,7 @@ for (let btn of Array.from(operationBtns)) {
         /*  if there's no second operand - activate decimal button if it was
             disabled (since we're working with brand new operand), and check
             if there's another operation symbol on display. If so - replace     */
-        else { 
+        else {
             decimalBtn.disabled = calculator.isDecimal[1];
             if (isNaN(+currNumberDisplay.textContent.slice(-1)))
                 currNumberDisplay.textContent = currNumberDisplay.textContent.slice(0, -2);
@@ -166,12 +176,10 @@ clearEntryBtn.addEventListener('click', () => {
 negativeBtn.addEventListener('click', () => {
     // if there's second operand flip - the sign on it
     if (calculator.expression[1] !== "") {
-        calculator.expression[1] = (-1 * calculator.expression[1]).toString();
-        currNumberDisplay.textContent = calculator.expression[1];
+        changeSign(1);
     } // else flip the sign on first one and clear operator (if choosen)
     else {
-        calculator.expression[0] = (-1 * calculator.expression[0]).toString();
-        currNumberDisplay.textContent = calculator.expression[0];
+        changeSign(0);
         calculator.expression[2] = "";
     }
 });
