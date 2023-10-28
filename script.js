@@ -36,15 +36,15 @@ function renewBeforeSecondOperand() {
     calculator.expression[0].charAt(0) != "-" ?
         resultString += calculator.expression[0] :
         resultString += `(${calculator.expression[0]})`;
-        console.log(resultString);
-    
+
     resultString = resultString + calculator.expression[2];
     prevExprDisplay.textContent = resultString;
 }
 
 function addNewNumber(indexOfOperand, newSymbol) {
     // if there's a leading zero - override
-    if (calculator.expression[indexOfOperand].slice(-1) === "0" && newSymbol != '.')
+    if (calculator.expression[indexOfOperand][0] === "0" &&
+        calculator.expression[indexOfOperand].length === 1 && newSymbol != '.')
         calculator.expression[indexOfOperand] = newSymbol;
     else calculator.expression[indexOfOperand] += newSymbol;
     currNumberDisplay.textContent = calculator.expression[indexOfOperand];
